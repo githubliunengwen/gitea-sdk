@@ -1,43 +1,35 @@
-"""
-dongjak-math-utils 基本用法示例
-"""
+import requests
+from typing import Optional, Dict, Union, Any
 
-import logging
-from dongjak_math_utils import add, subtract, multiply, divide
-
-# 设置日志级别
-logging.basicConfig(level=logging.DEBUG)
-
-def main():
-    """演示基本用法"""
-    print("简单数学工具库演示")
-    print("-" * 20)
-    
-    # 加法示例
-    result = add(10, 5)
-    print(f"10 + 5 = {result}")
-    
-    # 减法示例
-    result = subtract(10, 5)
-    print(f"10 - 5 = {result}")
-    
-    # 乘法示例
-    result = multiply(10, 5)
-    print(f"10 * 5 = {result}")
-    
-    # 除法示例
-    result = divide(10, 5)
-    print(f"10 / 5 = {result}")
-    
-    # 浮点数示例
-    result = add(3.14, 2.71)
-    print(f"3.14 + 2.71 = {result}")
-    
-    print("\n高级用法 - 链式操作")
-    # 链式操作示例
-    result = divide(multiply(add(10, 5), subtract(8, 3)), 2)
-    print(f"((10 + 5) * (8 - 3)) / 2 = {result}")
+session = requests.Session()
+session.headers.update({
+            "Accept": "application/json",
+            "Content-Type": "multipart/form-data",
+            'Authorization': 'token 25ad59263c1d35a2b17b1af99b94a577dc76f815',
+        })
 
 
-if __name__ == "__main__":
-    main()
+def post(path: str, params: Optional[Dict[str, Any]] = None, json_data: Optional[Dict[str, Any]] = None, files: Optional[Dict[str, Any]] = None) -> Union[Dict[str, Any], list]:
+    """Make a POST request to the API.
+
+    Args:
+        path: API endpoint path
+        params: Query parameters
+        json_data: JSON data
+        files: File data
+    Returns:
+        Response data
+    """
+    return session.request("POST", path, params=params, json=json_data, files=files)
+
+url = "https://gitea.ailoveworld.cn/api/v1/repos/issues_api_test/issues_api_test/issues/1/assets"
+
+payload={}
+files=[
+   ('attachment',('C:\\Users\\user\\Desktop\\全员AI.png',open('C:\\Users\\user\\Desktop\\全员AI.png','rb'),'image/png'))
+]
+
+
+response = session.post(url, files=files, data=payload)
+
+print(response.json())
